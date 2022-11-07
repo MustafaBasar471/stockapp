@@ -7,7 +7,7 @@ const Navbar = () => {
         <p className="text-2xl text-white">Stock Market App</p>
 
         <input
-          placeholder="Enter Somethink"
+          placeholder="Enter Something"
           className="w-[20rem] px-5 py-2 rounded focus:outline-none focus:bg-slate-100 focus:shadow-lg"
         />
       </div>
