@@ -22,7 +22,6 @@ function App() {
     axios
       .request(options)
       .then(function (res) {
-        console.log(res.data);
         setData(res.data);
       })
       .catch(function (err) {

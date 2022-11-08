@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import Navbar from "../components/Navbar";
@@ -14,14 +14,13 @@ const Home = () => {
     setFav,
     isClickedFav,
     setIsClickedFav,
+    setAlert,
+    alert,
+    setPriceLevel,
+    priceLevel,
   } = useContext(Context);
 
-  useEffect(() => {
-    if (filterData !== "") {
-      setSearchTerm([...searchTerm, filterData]);
-    }
-  }, [filterData]);
-
+  // HandleClick Section
   const handleClick = (item) => {
     const newFav = {
       identifier: item.identifier,
@@ -34,6 +33,35 @@ const Home = () => {
     setFav([...fav, newFav]);
     toast.success(`${item.identifier} successfully added`);
   };
+
+  const handleAddAlertClick = (item) => {
+    const newAlert = {
+      identifier: item.identifier,
+      lastPrice: item.lastPrice,
+      alertPrice: priceLevel ? priceLevel : 150,
+    };
+    setAlert([...alert, newAlert]);
+    toast.success(`${newAlert.alertPrice} price alerts added successfully`);
+  };
+
+  // UseEffect Section
+
+  useEffect(() => {
+    if (filterData !== "") {
+      setSearchTerm([...searchTerm, filterData]);
+    }
+  }, [filterData]);
+
+  useEffect(() => {
+    alert.forEach((item) => {
+      if (item.alertPrice >= item.lastPrice) {
+        toast("Price range has reached the level you set", {
+          icon: "⚠️",
+        });
+      }
+    });
+  }, [alert, filterData]);
+
   return (
     <>
       <Navbar />
@@ -70,21 +98,35 @@ const Home = () => {
         </div>
         {isClickedFav ? (
           <div className="overflow-auto rounded-lg">
+            <div className="flex items-center justify-center space-x-2">
+              <p>Set the price you want to receive alerts for :</p>
+              <input
+                placeholder="default value 150"
+                className="px-5 py-2 outline-none focus:bg-slate-100 rounded-lg"
+                onChange={(e) => setPriceLevel(e.target.value)}
+              />
+            </div>
             <table className="mt-3 w-full">
               <thead>
                 <tr>
-                  {["Index", "Last", "High", "Low", "Chg", "Time"].map(
-                    (item, idx) => (
-                      <th
-                        className={`${
-                          idx === 6 ? "w-auto" : "w-[10rem]"
-                        } p-3 text-sm font-semibold  text-left`}
-                        key={idx}
-                      >
-                        {item}
-                      </th>
-                    )
-                  )}
+                  {[
+                    "Index",
+                    "Last",
+                    "High",
+                    "Low",
+                    "Chg",
+                    "Time",
+                    "Add Alert",
+                  ].map((item, idx) => (
+                    <th
+                      className={`${
+                        idx === 0 ? "w-auto" : "w-[10rem]"
+                      } p-3 text-sm font-semibold  text-left`}
+                      key={idx}
+                    >
+                      {item}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -105,6 +147,12 @@ const Home = () => {
                       {item.pChange}%
                     </td>
                     <td>{item.lastUpdateTime}</td>
+                    <td>
+                      <IoMdAddCircleOutline
+                        className="text-2xl cursor-pointer"
+                        onClick={() => handleAddAlertClick(item)}
+                      />
+                    </td>
                   </tr>
                 ))}
               </tbody>
