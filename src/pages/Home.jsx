@@ -2,9 +2,19 @@ import React, { useContext, useEffect } from "react";
 import { Context } from "../context/Context";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import Navbar from "../components/Navbar";
+import toast, { Toaster } from "react-hot-toast";
 
 const Home = () => {
-  const { data, filterData, setSearchTerm, searchTerm } = useContext(Context);
+  const {
+    data,
+    filterData,
+    setSearchTerm,
+    searchTerm,
+    fav,
+    setFav,
+    isClickedFav,
+    setIsClickedFav,
+  } = useContext(Context);
 
   useEffect(() => {
     if (filterData !== "") {
@@ -12,10 +22,22 @@ const Home = () => {
     }
   }, [filterData]);
 
-  const handleClick = (item) => {};
+  const handleClick = (item) => {
+    const newFav = {
+      identifier: item.identifier,
+      lastPrice: item.lastPrice,
+      dayHigh: item.dayHigh,
+      dayLow: item.dayLow,
+      pChange: item.pChange,
+      lastUpdateTime: item.lastUpdateTime.slice(11),
+    };
+    setFav([...fav, newFav]);
+    toast.success(`${item.identifier} successfully added`);
+  };
   return (
     <>
       <Navbar />
+      <Toaster />
       <div className="bg-slate-200 lg:max-w-screen-lg lg:mx-auto mx-4 mt-10 p-5 rounded-lg">
         <div className="bg-white p-3 flex w-full justify-between">
           <p className="capitalize">recent searches : </p>
@@ -32,44 +54,34 @@ const Home = () => {
             Last updated{" "}
             <span className="text-gray-800 font-semibold">Now</span>
           </p>
-          <button className={`bg-blue-500 px-5 py-2`}>Show Favorites</button>
+          <button
+            className={`bg-blue-500 px-5 py-2 rounded-lg hover:bg-blue-300 duration-300`}
+            onClick={() => setIsClickedFav(!isClickedFav)}
+          >
+            {isClickedFav ? "Close Favorites" : "Show Favorites"}
+          </button>
         </div>
-        <div className="overflow-auto rounded-lg">
-          <table className="mt-3 w-full">
-            <thead>
-              <tr>
-                {["Index", "Last", "High", "Low", "Chg", "Time", "Fav"].map(
-                  (item, idx) => (
-                    <th
-                      className={`${
-                        idx === 0 ? "w-auto" : "w-[10rem]"
-                      } p-3 text-sm font-semibold  text-left`}
-                      key={idx}
-                    >
-                      {item}
-                    </th>
-                  )
-                )}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {data
-                ?.filter((val) => {
-                  if (filterData === "") {
-                    console.log(val);
-                    return val;
-                  } else if (
-                    val.symbol
-                      .toLowerCase()
-                      .includes(filterData.toLowerCase()) ||
-                    val.identifier
-                      .toLowerCase()
-                      .includes(filterData.toLowerCase())
-                  ) {
-                    return val;
-                  }
-                })
-                .map((item, idx) => (
+        {isClickedFav ? (
+          <div className="overflow-auto rounded-lg">
+            <table className="mt-3 w-full">
+              <thead>
+                <tr>
+                  {["Index", "Last", "High", "Low", "Chg", "Time"].map(
+                    (item, idx) => (
+                      <th
+                        className={`${
+                          idx === 6 ? "w-auto" : "w-[10rem]"
+                        } p-3 text-sm font-semibold  text-left`}
+                        key={idx}
+                      >
+                        {item}
+                      </th>
+                    )
+                  )}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {fav.map((item, idx) => (
                   <tr
                     key={idx}
                     className="bg-white hover:bg-gray-500 hover:text-white duration-100"
@@ -85,18 +97,76 @@ const Home = () => {
                     >
                       {item.pChange}%
                     </td>
-                    <td>{item.lastUpdateTime.slice(11)}</td>
-                    <td className="text-left">
-                      <IoMdAddCircleOutline
-                        className="text-2xl cursor-pointer"
-                        onClick={() => handleClick(item)}
-                      />
-                    </td>
+                    <td>{item.lastUpdateTime}</td>
                   </tr>
                 ))}
-            </tbody>
-          </table>
-        </div>
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="overflow-auto rounded-lg">
+            <table className="mt-3 w-full">
+              <thead>
+                <tr>
+                  {["Index", "Last", "High", "Low", "Chg", "Time", "Fav"].map(
+                    (item, idx) => (
+                      <th
+                        className={`${
+                          idx === 6 ? "w-auto" : "w-[10rem]"
+                        } p-3 text-sm font-semibold  text-left`}
+                        key={idx}
+                      >
+                        {item}
+                      </th>
+                    )
+                  )}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {data
+                  ?.filter((val) => {
+                    if (filterData === "") {
+                      return val;
+                    } else if (
+                      val.symbol
+                        .toLowerCase()
+                        .includes(filterData.toLowerCase()) ||
+                      val.identifier
+                        .toLowerCase()
+                        .includes(filterData.toLowerCase())
+                    ) {
+                      return val;
+                    }
+                  })
+                  .map((item, idx) => (
+                    <tr
+                      key={idx}
+                      className="bg-white hover:bg-gray-500 hover:text-white duration-100"
+                    >
+                      <td className="p-2">{item.identifier}</td>
+                      <td>{item.lastPrice}</td>
+                      <td>{item.dayHigh}</td>
+                      <td>{item.dayLow}</td>
+                      <td
+                        className={`${
+                          item.pChange >= 0 ? "text-green-700" : "text-red-700"
+                        }`}
+                      >
+                        {item.pChange}%
+                      </td>
+                      <td>{item.lastUpdateTime.slice(11)}</td>
+                      <td className="text-left">
+                        <IoMdAddCircleOutline
+                          className="text-2xl cursor-pointer"
+                          onClick={() => handleClick(item)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </>
   );

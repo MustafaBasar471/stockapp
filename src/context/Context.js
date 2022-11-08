@@ -6,6 +6,8 @@ export const ContextProvider = ({ children }) => {
   const [data, setData] = useState(null);
   const [filterData, setFilterData] = useState("");
   const [searchTerm, setSearchTerm] = useState([]);
+  const [fav, setFav] = useState([]);
+  const [isClickedFav, setIsClickedFav] = useState(false);
 
   return (
     <Context.Provider
@@ -16,6 +18,10 @@ export const ContextProvider = ({ children }) => {
         setFilterData,
         setSearchTerm,
         searchTerm,
+        setFav,
+        fav,
+        setIsClickedFav,
+        isClickedFav,
       }}
     >
       {children}
