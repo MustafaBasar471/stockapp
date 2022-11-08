@@ -39,7 +39,11 @@ const Home = () => {
       <Navbar />
       <Toaster />
       <div className="bg-slate-200 lg:max-w-screen-lg lg:mx-auto mx-4 mt-10 p-5 rounded-lg">
-        <div className="bg-white p-3 flex w-full justify-between">
+        <div
+          className={`bg-white p-3 w-full justify-between ${
+            searchTerm.length === 0 ? "hidden" : "flex"
+          }`}
+        >
           <p className="capitalize">recent searches : </p>
           <div className="flex space-x-3">
             {searchTerm.map((item, idx) => (
@@ -55,8 +59,11 @@ const Home = () => {
             <span className="text-gray-800 font-semibold">Now</span>
           </p>
           <button
-            className={`bg-blue-500 px-5 py-2 rounded-lg hover:bg-blue-300 duration-300`}
+            className={`bg-blue-500 px-5 py-2 rounded-lg hover:bg-blue-300 duration-300 ${
+              fav.length === 0 && "cursor-not-allowed bg-blue-300"
+            }`}
             onClick={() => setIsClickedFav(!isClickedFav)}
+            disabled={fav.length === 0 ? true : false}
           >
             {isClickedFav ? "Close Favorites" : "Show Favorites"}
           </button>
