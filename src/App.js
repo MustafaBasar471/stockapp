@@ -14,7 +14,8 @@ function App() {
       method: "GET",
       url: "https://latest-stock-price.p.rapidapi.com/any",
       headers: {
-        "X-RapidAPI-Key": "0ad61fd66bmshf23b37b02d45e3cp124725jsn82e9865409a5",
+        "X-RapidAPI-Key":
+          "getapikeyfrom https://rapidapi.com/suneetk92/api/latest-stock-price/",
         "X-RapidAPI-Host": "latest-stock-price.p.rapidapi.com",
       },
     };
