@@ -14,7 +14,7 @@ You may also see any lint errors in the console.
 
 ### `Creation of project foundations`
 
-1.Creating the file layout
+1.Creating the file layout \
 ├── public \
 │ └── index.html \
 ├── src\
@@ -30,19 +30,19 @@ You may also see any lint errors in the console.
 │ ├── index.js \
 │ └── index.css \
 ├── package.json \
-2.Finding the api to use \
+2.Finding the api to use
 
 ### `Coding Phase`
 
 1.Completion of the front end \
 2.Binding of api to front end \
-3.Creation of functions \
+3.Creation of functions
 
 ### `Test Phase`
 
 1.Testing the functions \
-2.Testing the responsivity \
+2.Testing the responsivity
 
 ### `Fix phase`
 
-1.Fixing the bugs \
+1.Fixing the bugs
